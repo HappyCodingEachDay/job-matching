@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: changeme
+      MYSQL_DATABASE: ready_tech_dev
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/my.cnf
+    networks:
+      - rails-network
+    ports:
+      - "23306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: db
+      DB_PASSWORD: changeme
+      DB_PORT: 3306
+      RAILS_ENV: development
+      DB_NAME: ready_tech_dev
+    volumes:
+      - .:/rails
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - rails-network
+    command: /bin/bash -c "bundle exec rails db:migrate && tail -f /dev/null"
+
+volumes:
+  db_data:
+
+networks:
+  rails-network:
+    driver: bridge
