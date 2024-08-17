@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_15_121717) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_17_115501) do
   create_table "job_seekers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.json "skills"
@@ -25,4 +25,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_15_121717) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "recommendations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "job_id", null: false
+    t.bigint "job_seeker_id", null: false
+    t.integer "matching_skill_count", default: 0
+    t.integer "matching_skill_percent", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_id", "job_seeker_id"], name: "index_recommendations_on_job_id_and_job_seeker_id", unique: true
+    t.index ["job_id"], name: "index_recommendations_on_job_id"
+    t.index ["job_seeker_id"], name: "index_recommendations_on_job_seeker_id"
+  end
+
+  add_foreign_key "recommendations", "job_seekers"
+  add_foreign_key "recommendations", "jobs"
 end
