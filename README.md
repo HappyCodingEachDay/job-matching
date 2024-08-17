@@ -1,8 +1,7 @@
 # README
 
-### Data Structure
+## Data Structure
 When designing a job recommendation system based on skills, we can use different methods to store and query the data: plain text, NoSql(ES, MongoDb), relational tables, or MySQL’s JSON data type with built-in functions.
-
 After comparing these methods, I believe the best choice for this case is **MySQL’s JSON data type with its built-in functions**.
 
 **Reasons**:
@@ -11,13 +10,10 @@ After comparing these methods, I believe the best choice for this case is **MySQ
 - **Simpler Schema**: By using JSON fields, we can keep the schema simple, reducing the number of tables and joins.
 - **Efficient Queries**: MySQL’s JSON functions are designed to be fast and efficient, improving query performance.
 
+## Performance Considerations
+To handle large-scale data effectively, it's crucial to manage how much data is processed in each query. The `RecommendationService` uses `batch_size` and `offset` parameters are to control and optimize query.
 
-### Performance Considerations
-To handle large-scale data effectively, it's crucial to manage how much data is processed in each query. The `RecommendationService` uses `batch_size` and `offset` parameters to control and optimize data retrieval.
-
-
-
-### Project Structure
+## Project Structure
 ```
 tree              
 .
@@ -30,6 +26,7 @@ tree
 │   └── models
 │       ├── job.rb
 │       └── job_seeker.rb
+│       └── recommendation.rb
 ├── config
 │   ├── database.yml
 ├── config.ru
@@ -37,6 +34,7 @@ tree
 │   ├── migrate
 │   │   ├── 20240815121650_create_jobs.rb
 │   │   └── 20240815121717_create_job_seekers.rb
+│   │   └── 20240817115501_create_recommendations.rb
 │   ├── schema.rb
 ├── docker-compose.yml
 ├── example_data
@@ -60,7 +58,7 @@ tree
 │   ├── spec_helper.rb
 ```
 
-### Local Setup
+## Local Setup
 #### Version
 - Ruby 3.0.0
 - Rails 7.1.3.4
@@ -117,7 +115,7 @@ bin/rake data:recommendations
    bundle exec rspec spec/lib/recommendation_service_spec.rb
    ```
 
-### Docker Compose Setup
+## Docker Compose Setup
 
 #### Set Up and Run Docker Compose
 
@@ -153,7 +151,7 @@ To generate recommendations in a Docker container:
 docker-compose run app bundle exec rake "data:recommendations"
 ```
 
-### Example Output
+- Example Output
 ```
 jobseeker_id,jobseeker_name,job_id,job_title,matching_skill_count,matching_skill_percent
 1,Alice Seeker,1,Ruby Developer,3,100
